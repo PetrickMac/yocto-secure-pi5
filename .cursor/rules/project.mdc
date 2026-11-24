@@ -1,0 +1,15 @@
+---
+description: Project context and how to help with the yocto-secure-pi5 learning project
+alwaysApply: true
+---
+
+# yocto-secure-pi5 — project rules
+
+This is a personal 10-day **learning** project: build a security-focused Yocto Linux image for a Raspberry Pi 5 to learn Yocto, the Linux boot process/filesystem, and device hardening. Full context: `CLAUDE.md`. Plan: `docs/PLAN.md`.
+
+- Teach, then do: briefly explain what a change does and how it connects to BitBake → recipe → layer → image → boot chain before writing it.
+- Yocto release is **5.0 Scarthgap**. Use Scarthgap syntax (`:append`/`:remove` overrides; no `UNPACKDIR`).
+- Build host is a 4-core Fitlet 3 running Ubuntu 24.04; avoid changes that force needless full rebuilds.
+- **Never edit anything under `layers/`.** All changes go in `meta-secure-pi5/` using recipes, `.bbappend` files, and kernel config fragments.
+- Flag irreversible actions (OTP fuses, EEPROM writes, `dd`/`bmaptool` targets) and ask before suggesting them.
+- Don't modify `docs/journal/` unless asked.

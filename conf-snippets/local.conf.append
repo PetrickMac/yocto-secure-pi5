@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# yocto-secure-pi5 — settings to append to build/conf/local.conf
+#   cat conf-snippets/local.conf.append >> build/conf/local.conf
+#
+# Mental model: local.conf is the LAST word for *this build directory*.
+# layer.conf (layers) -> distro conf (poky) -> machine conf -> local.conf
+# ---------------------------------------------------------------------------
+
+# --- Caches outside build/ ---------------------------------------------------
+# downloads   = fetched source tarballs/git mirrors (network-heavy)
+# sstate-cache = prebuilt task outputs (CPU-heavy). Keeping these outside build/
+# means I can delete build/tmp and rebuild in minutes instead of hours.
+DL_DIR ?= "${TOPDIR}/../cache/downloads"
+SSTATE_DIR ?= "${TOPDIR}/../cache/sstate-cache"
+
+# --- Fitlet 3: 4 cores, 32 GB RAM -------------------------------------------
+# BB_NUMBER_THREADS = how many BitBake *tasks* run at once
+# PARALLEL_MAKE     = how many compiler jobs *inside* one task
+BB_NUMBER_THREADS ?= "4"
+PARALLEL_MAKE ?= "-j 4"
+
+# Free disk by deleting each recipe's work dir after it builds.
+# Leave OFF during learning — I want to inspect tmp/work/ (Day 2).
+#INHERIT += "rm_work"
+
+# --- Target -------------------------------------------------------------------
+# Phase 1: qemux86-64 | Phase 2+: raspberrypi5 (needs meta-raspberrypi layers)
+MACHINE ?= "qemux86-64"
+
+# --- DEV ONLY: remove on Day 6 ----------------------------------------------
+# debug-tweaks = empty root password + extra debug features.
+# Convenient for learning, a serious vulnerability on a real device.
+EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+
+# --- Raspberry Pi 5 (uncomment on Day 4) ------------------------------------
+#MACHINE = "raspberrypi5"
+#ENABLE_UART = "1"                    # serial console on the GPIO header
+#LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"   # Wi-Fi/BT firmware license
+#IMAGE_FSTYPES:append = " wic.bz2 wic.bmap"
+#RPI_USE_U_BOOT = "1"                 # Day 5: add U-Boot to the boot chain
+
+# --- systemd (Day 3) ---------------------------------------------------------
+# Scarthgap's poky defaults to sysvinit. This swaps PID 1 to systemd.
+#INIT_MANAGER = "systemd"
+
+# --- Supply chain (Day 8) ----------------------------------------------------
+#INHERIT += "cve-check"

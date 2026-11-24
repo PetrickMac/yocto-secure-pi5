@@ -1,0 +1,17 @@
+---
+description: Conventions for BitBake recipes, appends, and config in meta-secure-pi5
+globs: ["meta-secure-pi5/**/*.bb", "meta-secure-pi5/**/*.bbappend", "meta-secure-pi5/**/*.bbclass", "meta-secure-pi5/**/*.conf", "meta-secure-pi5/**/*.cfg", "conf-snippets/**"]
+alwaysApply: false
+---
+
+# BitBake / Yocto conventions (Scarthgap)
+
+- Every recipe: `SUMMARY`, `LICENSE`, `LIC_FILES_CHKSUM`, and a pinned `SRCREV` for git sources (no `${AUTOREV}`).
+- Filenames: `<name>_<version>.bb`; appends: `<name>_%.bbappend` only when version-agnostic is intended.
+- Use override syntax `VAR:append = " item"` (leading space) and `VAR:remove`; never the old `_append`.
+- Prefer `?=` / `??=` in conf snippets so local overrides still work; explain the difference when used.
+- Add files with `FILESEXTRAPATHS:prepend := "${THISDIR}/files:"` in bbappends.
+- Kernel changes: config fragments (`*.cfg`) added via `SRC_URI += "file://name.cfg"` in a `linux-raspberrypi_%.bbappend` — not a full defconfig replacement.
+- Image recipes `inherit core-image` and use `IMAGE_INSTALL:append` / `IMAGE_FEATURES`.
+- Security-relevant settings (users, ssh, read-only-rootfs, debug-tweaks) get a one-line comment explaining the risk they address.
+- `layer.conf` must set `LAYERSERIES_COMPAT_secure-pi5 = "scarthgap"`.
