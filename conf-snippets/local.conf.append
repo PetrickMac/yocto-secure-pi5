@@ -33,11 +33,16 @@ MACHINE ?= "qemux86-64"
 EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
 
 # --- Raspberry Pi 5 (uncomment on Day 4) ------------------------------------
+# BitBake only allows comments on their own line. A trailing "# ..." after a
+# value is a parse error, so each note sits above the setting it explains.
 #MACHINE = "raspberrypi5"
-#ENABLE_UART = "1"                    # serial console on the GPIO header
-#LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"   # Wi-Fi/BT firmware license
+# Serial console on the GPIO header
+#ENABLE_UART = "1"
+# Accept the Wi-Fi/BT firmware license
+#LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"
 #IMAGE_FSTYPES:append = " wic.bz2 wic.bmap"
-#RPI_USE_U_BOOT = "1"                 # Day 5: add U-Boot to the boot chain
+# Day 5: add U-Boot to the boot chain
+#RPI_USE_U_BOOT = "1"
 
 # --- systemd (Day 3) ---------------------------------------------------------
 # Scarthgap's poky defaults to sysvinit. This swaps PID 1 to systemd.
